@@ -1,0 +1,57 @@
+/* Grid layout */
+.nutrition-card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Card container */
+.card {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Background Image */
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Overlay */
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Card title */
+.card-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Card description */
+.card-description {
+    color: white;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* Ensure images fill card */
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
