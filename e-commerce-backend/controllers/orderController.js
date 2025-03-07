@@ -147,7 +147,9 @@ export const verifyPayment = async (req, res) => {
       if (data.status === "Completed") {
         order.paymentStatus = "Completed";
         await order.save();
-        return res.redirect(`http://localhost:5173/payment-success?order_id=${order._id}`);
+        return res.redirect(
+          `http://localhost:5173/payment-success?order_id=${order._id}`
+        );
       } else {
         return res.redirect("http://localhost:5173/");
       }
@@ -173,21 +175,28 @@ export const getOrderHistory = async (req, res) => {
     }
     const decoded = jwt.verify(token, process.env.JWT);
 
+    // Fetch orders belonging to the user
     const orders = await Order.find({
       user: decoded.id,
       paymentStatus: "Completed",
-    })
-      .sort({ createdAt: -1 })
-      .populate({
-        path: "user",
-        select: "username email",
-      })
-      .populate({
-        path: "items",
-        populate: { path: "product", select: "title price" },
-      });
+    }).sort({ createdAt: -1 });
 
-    return res.status(200).json({ orders });
+    // Fetch order items separately and link them to orders
+    const ordersWithItems = await Promise.all(
+      orders.map(async (order) => {
+        const items = await OrderItem.find({ order: order._id }).populate({
+          path: "product",
+          select: "title price",
+        });
+
+        return {
+          ...order._doc,
+          items,
+        };
+      })
+    );
+
+    return res.status(200).json({ orders: ordersWithItems });
   } catch (error) {
     console.error("getOrderHistory error:", error);
     return res.status(400).json({ message: error.message });
