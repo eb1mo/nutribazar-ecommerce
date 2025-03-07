@@ -105,6 +105,7 @@ const Navbar = ({ userInfo }) => {
                   {userInfo.role === "admin" ? (
                     <>
                       <Link to="/admindashboard" className="dropdown-item px-4 py-2 hover:bg-gray-200">Admin Dashboard</Link>
+                      <Link to="/addcategory" className="dropdown-item px-4 py-2 hover:bg-gray-200">Add Category</Link>
                       <Link to="/addproduct" className="dropdown-item px-4 py-2 hover:bg-gray-200">Add Product</Link>
                       <Link to="/allorders" className="dropdown-item px-4 py-2 hover:bg-gray-200">Orders</Link>
                       <Link to="/allproducts" className="dropdown-item px-4 py-2 hover:bg-gray-200">Manage Products</Link>
