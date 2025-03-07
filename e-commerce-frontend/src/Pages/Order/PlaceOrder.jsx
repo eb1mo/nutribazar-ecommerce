@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProgressSteps from "../../Components/ProgressSteps";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const PlaceOrder = () => {
+  const navigate = useNavigate();
   const cart = useSelector((state) => state.cart);
   const shipping = useSelector((state) => state.shipping.shippingDetails);
 
@@ -12,19 +13,22 @@ const PlaceOrder = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-  const shippingCost = itemsTotal > 500 ? 0 : 10; // Free shipping for orders over $100
+  const shippingCost = itemsTotal > 500 ? 0 : 10; // free shipping over $500 example
   const tax = itemsTotal * 0.1; // 10% tax
   const total = itemsTotal + shippingCost + tax;
 
-  const totalAmountInSmallestUnit = total * 100;
-
   const handlePlaceOrder = async () => {
     try {
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      const userInfo = JSON.parse(localStorage.getItem("userInfo")); // your user info storage
       const token = userInfo ? userInfo.token : null;
+      if (!token) {
+        toast.error("You must be logged in to place an order.");
+        return;
+      }
+
       const payload = {
         items: cart.cartItems.map((item) => ({
-          product: item._id,
+          product: item._id, // ensure this is the product ID
           quantity: item.quantity,
         })),
         firstName: shipping.firstName,
@@ -34,10 +38,11 @@ const PlaceOrder = () => {
         city: shipping.city,
         phone: shipping.phone,
         zipcode: shipping.zipcode,
-        amount: totalAmountInSmallestUnit + tax + shippingCost, // Add tax and shipping to the total amount
         taxAmount: tax,
-        shippingCost: shippingCost,
+        shippingCost,
+        amount: total * 100, // converting to smallest currency unit (e.g., paisa)
       };
+
       const response = await axios.post(
         "http://localhost:5000/api/payment/initialize",
         payload,
@@ -47,12 +52,19 @@ const PlaceOrder = () => {
           },
         }
       );
+
       if (response.status === 200) {
         const { payment_url } = response.data;
-        window.location.href = payment_url; // Redirect to Khalti's payment page
+        if (!payment_url) {
+          toast.success("Order placed successfully (Cash on Delivery).");
+          navigate("/order");
+        } else {
+          window.location.href = payment_url;
+        }
       }
     } catch (error) {
-      toast.error("Payment Error:", error.message);
+      console.error("Payment Error:", error);
+      toast.error("Payment Error: " + error.message);
     }
   };
 
@@ -75,7 +87,6 @@ const PlaceOrder = () => {
                   <td className="px-4 py-2 text-left">Total</td>
                 </tr>
               </thead>
-
               <tbody>
                 {cart.cartItems.map((item, index) => (
                   <tr key={index} className="border-b">
@@ -88,7 +99,7 @@ const PlaceOrder = () => {
                     </td>
                     <td className="p-4">
                       <Link
-                        to={`/product/${item.product}`}
+                        to={`/product/${item._id}`}
                         className="text-green-500 hover:underline"
                       >
                         {item.name}
@@ -144,7 +155,7 @@ const PlaceOrder = () => {
             <h2 className="text-2xl font-semibold mb-4">Payment Method</h2>
             <strong>Method:</strong>{" "}
             <span className="text-green-500 font-bold">
-              <Link>Khalti</Link>
+              {shipping.paymentMethod || "N/A"}
             </span>
           </div>
           <button
