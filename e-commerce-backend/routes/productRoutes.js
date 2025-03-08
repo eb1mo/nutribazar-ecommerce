@@ -12,5 +12,5 @@ router.route("/search").post(checkAdminModels, searchProductByTitle);
 router.route("/:id").get(fetchProductById).delete(removeProductById);
 router.route("/update/:id").patch(updateProductDetails);
 router.route("/category/:id").get(getProductsByCategory);
-router.route("/products").delete(removeProduct)
+router.route("/products").delete(removeProduct);
 export default router;

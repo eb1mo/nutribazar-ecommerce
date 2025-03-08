@@ -25,7 +25,7 @@ let allowedOrigins = ["http://localhost:5173"];
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: "GET, POST, PUT, DELETE",
+    methods: "GET, POST, PUT, DELETE, PATCH",
     allowedHeaders: "Content-Type, Authorization",
   })
 );
