@@ -25,6 +25,7 @@ import Orders from "./Pages/Order/Order.jsx";
 import AddCategory from "./Pages/Admin/AddCategory.jsx";
 import EditProduct from "./Pages/Admin/EditProduct.jsx";
 import Profile from "./Pages/Auth/Profile.jsx";
+import SearchResults from "./Pages/SearchResults";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -51,6 +52,7 @@ const router = createBrowserRouter(
       <Route path="/allorders" element={<Orders />} />
       <Route path="/addcategory" element={<AddCategory />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/search-results" element={<SearchResults />} />
     </Route>
   )
 );

@@ -9,8 +9,13 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import { MdAdminPanelSettings, MdLogout, MdMenu } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { useSearch } from "../../Context/SearchContext";
+import axios from "axios";
 
 const Navbar = ({ userInfo }) => {
+  const navigate = useNavigate();
+  const { updateSearchResults, updateSearchQuery } = useSearch();
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,13 +36,32 @@ const Navbar = ({ userInfo }) => {
     setShowDropdown(false);
   };
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/product/search?name=${encodeURIComponent(searchQuery)}`
+      );
+      if (response.data) {
+        updateSearchResults(response.data);
+        updateSearchQuery(searchQuery);
+        navigate('/search-results');
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      // You might want to show a toast notification here
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 w-full bg-green-700 text-white flex items-center justify-between p-4 shadow-lg z-50">
       {/* Logo Section */}
       <div className="text-xl font-bold"><Link to="/"> NutriBazar </Link> </div>
 
       {/* Search Field (Visible on Larger Screens) */}
-      <div className="hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/3">
+      <form onSubmit={handleSearch} className="hidden md:flex items-center bg-white rounded-full px-4 py-2 w-1/3">
         <AiOutlineSearch className="text-gray-500" size={20} />
         <input
           type="text"
@@ -46,7 +70,7 @@ const Navbar = ({ userInfo }) => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full outline-none text-black px-2"
         />
-      </div>
+      </form>
 
       {/* Mobile Menu Button */}
       <button
@@ -63,7 +87,7 @@ const Navbar = ({ userInfo }) => {
         }`}
       >
         {/* Search Field (Hidden on Large Screens) */}
-        <div className="md:hidden flex items-center bg-white rounded-full px-4 py-2 w-full mb-4">
+        <form onSubmit={handleSearch} className="md:hidden flex items-center bg-white rounded-full px-4 py-2 w-full mb-4">
           <AiOutlineSearch className="text-gray-500" size={20} />
           <input
             type="text"
@@ -72,7 +96,7 @@ const Navbar = ({ userInfo }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full outline-none text-black px-2"
           />
-        </div>
+        </form>
 
         <Link to="/" className="nav-link flex items-center hover:text-gray-300">
           <AiOutlineHome className="mr-2" /> Home

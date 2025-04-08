@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route("/").get(fetchProducts);
 router.route("/add").post(uploadProductImage, addProduct);
-router.route("/search").post(checkAdminModels, searchProductByTitle);
+router.route("/search").get(searchProductByTitle);
 router.route("/:id").get(fetchProductById).delete(removeProductById);
 router.route("/update/:id").patch(uploadProductImage, updateProductDetails);
 router.route("/category/:id").get(getProductsByCategory);
