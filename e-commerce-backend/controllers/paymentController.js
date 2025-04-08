@@ -41,14 +41,6 @@ export const initializePayment = async (req, res) => {
         return res.status(404).json({ message: "Product not found" });
       }
       totalAmount += product.price * item.quantity;
-
-      // Create an order item document (extra fields removed to match schema)
-      const orderItem = new OrderItem({
-        product: item.product,
-        quantity: item.quantity,
-        user: decoded.id,
-      });
-      await orderItem.save();
     }
 
     // Add tax & shipping cost (if provided)
@@ -60,11 +52,32 @@ export const initializePayment = async (req, res) => {
     // Create a new Order in DB
     const newOrder = new Order({
       user: decoded.id,
-      paymentStatus: "Pending", // Updated from "pending" to "Pending"
-      payment_token: "", // will update after Khalti response
+      paymentStatus: "Pending",
+      payment_token: "",
       amount: totalAmountInPaisa,
+      shipping_name: `${firstName} ${lastName}`,
+      shipping_phone: phone,
+      shipping_address: shippingAddress,
+      shipping_city: city,
+      shipping_zip: zipcode,
     });
     await newOrder.save();
+
+    // Create order items and link them to the order
+    for (const item of items) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      const orderItem = new OrderItem({
+        order: newOrder._id,
+        product: item.product,
+        quantity: item.quantity,
+        user: decoded.id,
+      });
+      await orderItem.save();
+    }
 
     // Build payload for Khalti ePayment initiation with purchase_order_id included
     const payload = {

@@ -38,7 +38,9 @@ const Card = () => {
               </h5>
             </Link>
             <div className="flex items-center mt-2">
-              <span className="text-sm font-medium text-gray-500">{product.category.name}</span>
+              <span className="text-sm font-medium text-gray-500">
+                {product.category?.name || 'Uncategorized'}
+              </span>
             </div>
             <div className="flex items-center justify-between mt-4">
               <span className="text-2xl font-bold text-gray-900">${product.price}</span>

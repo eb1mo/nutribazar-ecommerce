@@ -28,7 +28,7 @@ const PlaceOrder = () => {
 
       const payload = {
         items: cart.cartItems.map((item) => ({
-          product: item._id, // ensure this is the product ID
+          product: item._id,
           quantity: item.quantity,
         })),
         firstName: shipping.firstName,
@@ -38,9 +38,7 @@ const PlaceOrder = () => {
         city: shipping.city,
         phone: shipping.phone,
         zipcode: shipping.zipcode,
-        taxAmount: tax,
-        shippingCost,
-        amount: total * 100, // converting to smallest currency unit (e.g., paisa)
+        amount: total * 100,
       };
 
       const response = await axios.post(

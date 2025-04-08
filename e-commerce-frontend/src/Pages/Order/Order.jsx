@@ -63,14 +63,22 @@ const Order = () => {
               </p>
               <p className="text-gray-700">
                 <span className="font-semibold">Shipping Name:</span>{" "}
-                {order.shipping_name}
+                {order.shipping_name || 'Not provided'}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Shipping Address:</span>{" "}
+                {order.shipping_address || 'Not provided'}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Shipping Phone:</span>{" "}
+                {order.shipping_phone || 'Not provided'}
               </p>
               <h3 className="mt-3 font-semibold text-green-800">Items:</h3>
               <ul className="mt-2">
-                {order.items.map((item) => (
+                {order.items?.map((item) => (
                   <li key={item._id} className="ml-4 text-gray-800">
-                    {item.product.title} ({item.quantity}) - Rs.{" "}
-                    {item.product.price}
+                    {item.product?.name || 'Product name not available'} ({item.quantity}) - Rs.{" "}
+                    {item.product?.price || 'Price not available'}
                   </li>
                 ))}
               </ul>

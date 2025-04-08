@@ -38,11 +38,11 @@ const EditProduct = () => {
         setDescription(data.description || "");
         setPrice(data.price || "");
         setQuantity(data.stock || "");
-        setCategory(data.category || "");
+        setCategory(data.category._id || "");
         setExistingImage(data.productImage || "");
       } catch (error) {
         toast.error("Failed to load product data");
-        console.error(error);
+        console.error("Error fetching product:", error);
       }
     };
 
@@ -50,87 +50,71 @@ const EditProduct = () => {
     fetchProduct();
   }, [id]);
 
-  // Handle Edit Product submission
-  // const handleEditProduct = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-
-  //   const formData = new FormData();
-  //   formData.append("name", productName);
-  //   formData.append("description", description);
-  //   formData.append("price", price);
-  //   formData.append("stock", quantity);
-  //   formData.append("category", category);
-  //   if (image) {
-  //     formData.append("image", image);
-  //   }
-
-  //   try {
-  //     // Use axios instead of fetch for better cross-browser compatibility
-  //     const response = await axios.patch(
-  //       `http://localhost:5000/api/product/update/${id}`,
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       }
-  //     );
-
-  //     toast.success("Product updated successfully");
-  //     navigate("/allproducts");
-  //   } catch (error) {
-  //     console.error("Update error:", error);
-  //     const errorMessage =
-  //       error.response?.data?.message || "Failed to update product";
-  //     toast.error(errorMessage);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleEditProduct = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("name", productName);
-    formData.append("description", description);
-    formData.append("price", price);
-    formData.append("stock", quantity);
-    formData.append("category", category);
-    if (image) {
-      formData.append("image", image);
-    }
+    console.log("Form submitted with data:", {
+      name: productName,
+      description,
+      price,
+      stock: quantity,
+      category,
+      productImage: image ? "New image selected" : "No new image"
+    });
 
     try {
-      console.log(
-        "Sending update request to:",
-        `http://localhost:5000/api/product/update/${id}`
-      );
-      for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
+      // Get user info from localStorage
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      const token = userInfo?.token;
+
+      if (!token) {
+        toast.error("Please login to continue");
+        navigate("/login");
+        return;
       }
 
-      const response = await axios.patch(
-        `http://localhost:5000/api/product/update/${id}`, // Ensure correct API route
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const formData = new FormData();
+      formData.append("name", productName);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("stock", quantity);
+      formData.append("category", category);
+      if (image) {
+        formData.append("productImage", image);
+      }
+
+      console.log("Sending request to:", `http://localhost:5000/api/product/update/${id}`);
+      console.log("Request method: PATCH");
+      console.log("Request headers:", {
+        Authorization: `Bearer ${token}`
+      });
+
+      const response = await fetch(`http://localhost:5000/api/product/update/${id}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      console.log("Response status:", response.status);
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update product");
+      }
 
       toast.success("Product updated successfully");
       navigate("/allproducts");
     } catch (error) {
-      console.error("Update error:", error);
-      const errorMessage =
-        error.response?.data?.message || "Failed to update product";
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+      console.error("Error updating product:", error);
+      console.error("Error details:", {
+        message: error.message,
+        response: error.response,
+        status: error.status,
+        headers: error.headers
+      });
+      toast.error(error.message || "Failed to update product");
     }
   };
 

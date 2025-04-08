@@ -1,5 +1,6 @@
 import Product from "./../models/productModel.js";
 import fs from "fs";
+import path from "path";
 
 const addProduct = async (req, res) => {
   try {
@@ -73,26 +74,48 @@ const updateProductDetails = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, stock, category } = req.body;
 
+    // Validate required fields
+    if (!name || !description || !price || !stock || !category) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     let product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    product.name = name || product.name;
-    product.description = description || product.description;
-    product.price = price || product.price;
-    product.stock = stock || product.stock;
-    product.category = category || product.category;
+    // Update product fields
+    product.name = name;
+    product.description = description;
+    product.price = Number(price);
+    product.stock = Number(stock);
+    product.category = category;
 
+    // Handle image update
     if (req.file) {
-      product.productImage = `/uploads/${req.file.filename}`; // Save file path
+      // Delete old image if it exists
+      if (product.productImage) {
+        const oldImagePath = path.join(process.cwd(), product.productImage);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+      product.productImage = `/uploads/${req.file.filename}`;
+    }
+
+    // Validate the updated product
+    try {
+      await product.validate();
+    } catch (validationError) {
+      return res.status(400).json({ message: validationError.message });
     }
 
     await product.save();
-    res.json({ message: "Product updated successfully", product });
+    console.log("Updated product:", product);
+    res.status(200).json({ message: "Product updated successfully", product });
   } catch (error) {
     console.error("Update error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: error.message || "Internal Server Error" });
   }
 };
 

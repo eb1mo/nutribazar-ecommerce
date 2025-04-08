@@ -186,7 +186,7 @@ export const getOrderHistory = async (req, res) => {
       orders.map(async (order) => {
         const items = await OrderItem.find({ order: order._id }).populate({
           path: "product",
-          select: "title price",
+          select: "name price description productImage",
         });
 
         return {
