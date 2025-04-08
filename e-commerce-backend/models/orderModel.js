@@ -38,6 +38,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    items: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "OrderItem"
+    }]
   },
   { timestamps: true }
 );

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Order = () => {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +29,7 @@ const Order = () => {
           }
         );
         setOrders(response.data.orders);
+        setIsAdmin(response.data.isAdmin);
       } catch (err) {
         console.error("Error fetching orders:", err);
         setError("Failed to fetch orders. Please try again.");
@@ -39,7 +41,9 @@ const Order = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-green-50 text-gray-900">
-      <h1 className="text-4xl font-bold mb-6 text-green-700">Order History</h1>
+      <h1 className="text-4xl font-bold mb-6 text-green-700">
+        {isAdmin ? "All Orders" : "My Orders"}
+      </h1>
       {error && <p className="text-red-600 font-medium">{error}</p>}
       {orders.length === 0 && !error ? (
         <p className="text-gray-600">No orders found.</p>
@@ -50,35 +54,71 @@ const Order = () => {
               key={order._id}
               className="bg-white p-5 mb-6 rounded-2xl shadow-lg"
             >
-              <h2 className="text-xl font-semibold text-green-800">
-                Order ID: {order._id}
-              </h2>
-              <p className="text-gray-700">
-                <span className="font-semibold">Payment Status:</span>{" "}
-                {order.paymentStatus}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Amount:</span> Rs.{" "}
-                {order.amount / 100}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Shipping Name:</span>{" "}
-                {order.shipping_name || 'Not provided'}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Shipping Address:</span>{" "}
-                {order.shipping_address || 'Not provided'}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Shipping Phone:</span>{" "}
-                {order.shipping_phone || 'Not provided'}
-              </p>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-xl font-semibold text-green-800">
+                    Order ID: {order._id}
+                  </h2>
+                  {isAdmin && (
+                    <p className="text-gray-700">
+                      <span className="font-semibold">Customer:</span>{" "}
+                      {order.user?.username || 'Unknown'} ({order.user?.email || 'No email'})
+                    </p>
+                  )}
+                </div>
+                <div className="text-right">
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Date:</span>{" "}
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Status:</span>{" "}
+                    <span className={`px-2 py-1 rounded ${
+                      order.paymentStatus === "Completed" 
+                        ? "bg-green-100 text-green-800" 
+                        : order.paymentStatus === "Failed"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}>
+                      {order.paymentStatus}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <p className="text-gray-700">
+                  <span className="font-semibold">Amount:</span> Rs.{" "}
+                  {order.amount / 100}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-semibold">Shipping Name:</span>{" "}
+                  {order.shipping_name || 'Not provided'}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-semibold">Shipping Address:</span>{" "}
+                  {order.shipping_address || 'Not provided'}
+                </p>
+                <p className="text-gray-700">
+                  <span className="font-semibold">Shipping Phone:</span>{" "}
+                  {order.shipping_phone || 'Not provided'}
+                </p>
+              </div>
+
               <h3 className="mt-3 font-semibold text-green-800">Items:</h3>
               <ul className="mt-2">
                 {order.items?.map((item) => (
-                  <li key={item._id} className="ml-4 text-gray-800">
-                    {item.product?.name || 'Product name not available'} ({item.quantity}) - Rs.{" "}
-                    {item.product?.price || 'Price not available'}
+                  <li key={item._id} className="ml-4 text-gray-800 flex items-center gap-4">
+                    <img 
+                      src={`http://localhost:5000/${item.product?.productImage}`} 
+                      alt={item.product?.name} 
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                    <div>
+                      <p className="font-medium">{item.product?.name || 'Product name not available'}</p>
+                      <p>Quantity: {item.quantity}</p>
+                      <p>Price: Rs. {item.product?.price || 'Price not available'}</p>
+                    </div>
                   </li>
                 ))}
               </ul>

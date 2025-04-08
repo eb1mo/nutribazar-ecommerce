@@ -5,6 +5,7 @@ import UserToken from "../models/usertokenModel.js";
 import Order from "../models/OrderModel.js";
 import OrderItem from "../models/orderItemModel.js";
 import Product from "../models/productModel.js";
+import User from "../models/userModel.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -175,28 +176,34 @@ export const getOrderHistory = async (req, res) => {
     }
     const decoded = jwt.verify(token, process.env.JWT);
 
-    // Fetch orders belonging to the user
-    const orders = await Order.find({
-      user: decoded.id,
-      paymentStatus: "Completed",
-    }).sort({ createdAt: -1 });
+    // Get user details to check if admin
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    // Fetch order items separately and link them to orders
-    const ordersWithItems = await Promise.all(
-      orders.map(async (order) => {
-        const items = await OrderItem.find({ order: order._id }).populate({
-          path: "product",
-          select: "name price description productImage",
-        });
+    let query = {};
+    // If user is not admin, only show their orders
+    if (user.role !== "admin") {
+      query.user = decoded.id;
+    }
 
-        return {
-          ...order._doc,
-          items,
-        };
+    // Fetch orders and populate necessary fields
+    const orders = await Order.find(query)
+      .sort({ createdAt: -1 })
+      .populate({
+        path: 'items',
+        populate: {
+          path: 'product',
+          select: 'name price description productImage'
+        }
       })
-    );
+      .populate('user', 'username email'); // Populate user details for admin view
 
-    return res.status(200).json({ orders: ordersWithItems });
+    return res.status(200).json({ 
+      orders,
+      isAdmin: user.role === "admin" // Include admin status in response
+    });
   } catch (error) {
     console.error("getOrderHistory error:", error);
     return res.status(400).json({ message: error.message });
