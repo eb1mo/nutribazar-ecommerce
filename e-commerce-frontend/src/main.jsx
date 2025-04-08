@@ -24,6 +24,7 @@ import PaymentSuccess from "./Pages/Order/PaymentSuccess.jsx";
 import Orders from "./Pages/Order/Order.jsx";
 import AddCategory from "./Pages/Admin/AddCategory.jsx";
 import EditProduct from "./Pages/Admin/EditProduct.jsx";
+import Profile from "./Pages/Auth/Profile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -49,6 +50,7 @@ const router = createBrowserRouter(
       <Route path="/payment-success" element={<PaymentSuccess />} />
       <Route path="/allorders" element={<Orders />} />
       <Route path="/addcategory" element={<AddCategory />} />
+      <Route path="/profile" element={<Profile />} />
     </Route>
   )
 );

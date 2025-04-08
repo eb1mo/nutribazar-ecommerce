@@ -112,7 +112,10 @@ const Navbar = ({ userInfo }) => {
                       <Link to="/allusers" className="dropdown-item px-4 py-2 hover:bg-gray-200">Manage Users</Link>
                     </>
                   ) : (
-                    <Link to="/profile" className="dropdown-item px-4 py-2 hover:bg-gray-200">Update Profile</Link>
+                    <>
+                      <Link to="/profile" className="dropdown-item px-4 py-2 hover:bg-gray-200">Update Profile</Link>
+                      <Link to="/allorders" className="dropdown-item px-4 py-2 hover:bg-gray-200">My Orders</Link>
+                    </>
                   )}
                   <button onClick={logoutAndCloseDropdown} className="dropdown-item px-4 py-2 hover:bg-gray-200 w-full text-left">
                     <MdLogout className="mr-2" /> Logout
