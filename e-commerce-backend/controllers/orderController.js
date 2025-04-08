@@ -66,7 +66,12 @@ export const createOrder = async (req, res) => {
       totalPrice += product.price * quantity;
     }
 
-    const totalPriceInPaisa = totalPrice * 100;
+    // Calculate shipping and tax based on totalPrice
+    const shippingCost = totalPrice > 500 ? 0 : 10;
+    const tax = totalPrice * 0.1;
+    const total = totalPrice + shippingCost + tax;
+
+    const totalPriceInPaisa = total * 100;
     newOrder.amount = totalPriceInPaisa;
     await newOrder.save();
 

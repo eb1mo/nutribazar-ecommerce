@@ -44,8 +44,11 @@ const PlaceOrder = () => {
         city: shipping.city,
         phone: shipping.phone,
         zipcode: shipping.zipcode,
-        amount: total * 100,
+        amount: (itemsTotal + shippingCost + tax) * 100,
+        
       };
+      
+ console.log(payload.amount);
 
       const response = await axios.post(
         "http://localhost:5000/api/payment/initialize",

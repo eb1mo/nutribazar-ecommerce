@@ -98,7 +98,7 @@ const Order = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <div>
                     <p className="text-gray-700">
-                      <span className="font-medium">Amount:</span> Rs.{" "}
+                      <span className="font-medium">Amount:</span> NPR{" "}
                       {order.amount / 100}
                     </p>
                     <p className="text-gray-700 mt-1">
@@ -132,7 +132,7 @@ const Order = () => {
                           <p className="font-medium text-gray-800">{item.product?.name || 'Product name not available'}</p>
                           <div className="flex flex-wrap gap-4 mt-1 text-sm text-gray-600">
                             <p>Quantity: {item.quantity}</p>
-                            <p>Price: Rs. {item.product?.price || 'Price not available'}</p>
+                            <p>Price: NPR {item.product?.price || 'Price not available'}</p>
                           </div>
                         </div>
                       </div>

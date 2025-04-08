@@ -29,31 +29,14 @@ export const initializePayment = async (req, res) => {
       city,
       phone,
       zipcode,
-      taxAmount,
-      shippingCost,
+      amount,
     } = req.body;
-
-    // Calculate total amount in the base currency
-    let totalAmount = 0;
-    for (const item of items) {
-      const product = await Product.findById(item.product);
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-      totalAmount += product.price * item.quantity;
-    }
-
-    // Add tax & shipping cost (if provided)
-    totalAmount += (taxAmount || 0) + (shippingCost || 0);
-
-    // Convert to paisa (smallest currency unit)
-    const totalAmountInPaisa = totalAmount * 100;
 
     // Create a new Order in DB
     const newOrder = new Order({
       user: decoded.id,
       paymentStatus: "Pending",
-      amount: totalAmountInPaisa,
+      amount: amount,
       shipping_name: `${firstName} ${lastName}`,
       shipping_phone: phone,
       shipping_address: shippingAddress,
@@ -88,7 +71,7 @@ export const initializePayment = async (req, res) => {
     const payload = {
       return_url: "http://localhost:5000/api/payment/verify",
       website_url: "http://localhost:5000",
-      amount: totalAmountInPaisa,
+      amount: amount,
       purchase_order_id: newOrder._id.toString(),
       purchase_order_name: `Order-${newOrder._id}`,
       customer_info: {
