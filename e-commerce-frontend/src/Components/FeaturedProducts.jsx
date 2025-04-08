@@ -40,7 +40,7 @@ const FeaturedProducts = () => {
               </h5>
               <div className="flex items-center justify-between mt-2">
                 <span className="text-lg font-bold text-gray-900">
-                  ${product.price}
+                  NPR {product.price}
                 </span>
                 <Link
                   to={`/singleproduct/${product._id}`}

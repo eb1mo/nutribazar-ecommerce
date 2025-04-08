@@ -15,7 +15,7 @@ const orderSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       enum: ["Khalti", "Cash on Delivery"],
-      default: "Cash on Delivery",
+      default: "Khalti",
     },
     khalti_pidx: {
       type: String,

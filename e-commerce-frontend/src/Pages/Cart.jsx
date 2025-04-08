@@ -53,7 +53,7 @@ const Cart = () => {
                     />
                     {item.name}
                   </td>
-                  <td className="p-3">${item.price}</td>
+                  <td className="p-3">NPR {item.price}</td>
                   <td className="p-3 flex items-center gap-3">
                     <button
                       className="px-2 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition"
@@ -72,7 +72,7 @@ const Cart = () => {
                     </button>
                   </td>
                   <td className="p-3 font-semibold">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    NPR {(item.price * item.quantity).toFixed(2)}
                   </td>
                 </tr>
               ))}

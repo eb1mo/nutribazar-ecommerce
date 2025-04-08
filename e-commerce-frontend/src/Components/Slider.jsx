@@ -51,7 +51,7 @@ const Slider = () => {
                 </p>
                 <div className="flex items-center justify-between mt-auto">
                   <span className="text-2xl font-bold text-gray-900">
-                    ${product.price}
+                    NPR {product.price}
                   </span>
                   <Link
                     to={`/singleproduct/${product._id}`}

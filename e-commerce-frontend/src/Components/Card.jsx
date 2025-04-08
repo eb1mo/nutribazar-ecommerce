@@ -43,7 +43,7 @@ const Card = () => {
               </span>
             </div>
             <div className="flex items-center justify-between mt-4">
-              <span className="text-2xl font-bold text-gray-900">${product.price}</span>
+              <span className="text-2xl font-bold text-gray-900">NPR {product.price}</span>
               <Link
                 to={`/singleproduct/${product._id}`}
                 className="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 text-sm"

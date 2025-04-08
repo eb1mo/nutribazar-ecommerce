@@ -26,6 +26,12 @@ const PlaceOrder = () => {
         return;
       }
 
+      // Check payment method
+      if (shipping.paymentMethod === "Cash on Delivery") {
+        toast.error("Cash on Delivery is not yet available. Please use Khalti for payment. (Note: Logout to clear cart & checkout details cache.)");
+        return;
+      }
+
       const payload = {
         items: cart.cartItems.map((item) => ({
           product: item._id,
@@ -114,9 +120,9 @@ const PlaceOrder = () => {
                           </Link>
                         </td>
                         <td className="px-6 py-4 text-gray-600">{item.quantity}</td>
-                        <td className="px-6 py-4 text-gray-600">${item.price.toFixed(2)}</td>
+                        <td className="px-6 py-4 text-gray-600">NPR {item.price.toFixed(2)}</td>
                         <td className="px-6 py-4 text-gray-600">
-                          ${(item.quantity * item.price).toFixed(2)}
+                         NPR {(item.quantity * item.price).toFixed(2)}
                         </td>
                       </tr>
                     ))}
@@ -131,19 +137,19 @@ const PlaceOrder = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Items Total</span>
-                        <span className="text-gray-800">${itemsTotal.toFixed(2)}</span>
+                        <span className="text-gray-800">NPR {itemsTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Shipping</span>
-                        <span className="text-gray-800">${shippingCost.toFixed(2)}</span>
+                        <span className="text-gray-800">NPR {shippingCost.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Tax</span>
-                        <span className="text-gray-800">${tax.toFixed(2)}</span>
+                        <span className="text-gray-800">NPR {tax.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between pt-2 border-t border-gray-200">
                         <span className="font-semibold text-gray-800">Total</span>
-                        <span className="font-semibold text-gray-800">${total.toFixed(2)}</span>
+                        <span className="font-semibold text-gray-800">NPR {total.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
