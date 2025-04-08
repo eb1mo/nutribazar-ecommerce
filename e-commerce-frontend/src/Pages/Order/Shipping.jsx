@@ -1,9 +1,9 @@
 import { useState } from "react";
-import ProgressSteps from "../../Components/ProgressSteps";
 import { useDispatch } from "react-redux";
 import { saveShippingDetails } from "../../redux/features/cart/shippingSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ProgressSteps from "../../Components/ProgressSteps";
 
 const Shipping = () => {
   const [firstName, setFirstName] = useState("");
@@ -15,6 +15,7 @@ const Shipping = () => {
   const [zipcode, setZipcode] = useState("");
   const [country, setCountry] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -32,26 +33,30 @@ const Shipping = () => {
       !country
     ) {
       toast.error("All fields are required");
-    } else {
-      const shippingData = {
-        firstName,
-        lastName,
-        email,
-        address,
-        city,
-        country,
-        phone,
-        zipcode,
-        paymentMethod,
-      };
-      dispatch(saveShippingDetails(shippingData));
-      navigate("/placeorder");
+      return;
     }
+
+    const shippingData = {
+      firstName,
+      lastName,
+      email,
+      address,
+      city,
+      country,
+      phone,
+      zipcode,
+      paymentMethod,
+    };
+
+    // Save shipping details in Redux
+    dispatch(saveShippingDetails(shippingData));
+
+    // Move to PlaceOrder page
+    navigate("/placeorder");
   };
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-10">
-      {/* Progress Steps */}
       <ProgressSteps step1 step2 />
 
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg mt-10">
@@ -169,6 +174,17 @@ const Shipping = () => {
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 />
                 <span className="ml-2 text-gray-700">Khalti</span>
+              </label>
+
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  className="form-radio text-green-600"
+                  name="paymentMethod"
+                  value="Cash on Delivery"
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />
+                <span className="ml-2 text-gray-700">Cash on Delivery</span>
               </label>
             </div>
           </div>

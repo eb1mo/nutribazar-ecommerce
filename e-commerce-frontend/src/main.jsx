@@ -19,8 +19,13 @@ import AllProducts from "./Pages/Admin/AllProducts.jsx";
 import Shipping from "./Pages/Order/Shipping.jsx";
 import PlaceOrder from "./Pages/Order/PlaceOrder.jsx";
 import AdminDashboard from "./Pages/Admin/AdminDashboard.jsx";
-import AllOrders from "./Pages/Admin/AllOrders.jsx";
+// import AllOrders from "./Pages/Admin/AllOrders.jsx";
 import PaymentSuccess from "./Pages/Order/PaymentSuccess.jsx";
+import Orders from "./Pages/Order/Order.jsx";
+import AddCategory from "./Pages/Admin/AddCategory.jsx";
+import EditProduct from "./Pages/Admin/EditProduct.jsx";
+import Profile from "./Pages/Auth/Profile.jsx";
+import SearchResults from "./Pages/SearchResults";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,11 +43,16 @@ const router = createBrowserRouter(
       <Route path="/alluser" element={<AllUsers />} />
       <Route path="/allproduct" element={<AllProducts />} />
       <Route path="/addproduct" element={<AddProduct />} />
+      <Route path="/editproduct/:id" element={<EditProduct />} />
       <Route path="/allusers" element={<AllUsers />} />
       <Route path="/allproducts" element={<AllProducts />} />
       <Route path="/admindashboard" element={<AdminDashboard />} />
-      <Route path="/allorders" element={<AllOrders />} />
+      {/* <Route path="/allorders" element={<AllOrders />} />  */}
       <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/allorders" element={<Orders />} />
+      <Route path="/addcategory" element={<AddCategory />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/search-results" element={<SearchResults />} />
     </Route>
   )
 );

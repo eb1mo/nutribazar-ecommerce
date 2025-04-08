@@ -55,105 +55,94 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="container xl:mx-[9rem] sm:mx-[0] text-white">
-      <div className="flex flex-col md:flex-row">
-        <div className="md:w-3/4 p-3">
-          <div className="h-12">Create Product</div>
+    <div className="container mx-auto my-10 p-10 bg-white rounded-lg shadow-sm max-w-4xl">
+      <h1 className="text-2xl font-semibold text-green-600 mb-6">Create Product</h1>
 
-          <div className="mb-3">
-            <label className="border text-white px-4 block w-full text-center rounded-lg cursor-pointer font-bold py-11">
-              {image ? image.name : "Upload Image"}
+      {/* Image Upload Section */}
+      <div className="mb-6">
+        <label className="border-2 border-green-500 text-green-600 px-6 py-3 rounded-lg cursor-pointer font-semibold block w-full text-center hover:bg-green-100">
+          {image ? image.name : "Upload Product Image"}
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+        </label>
+      </div>
 
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                className={!image ? "hidden" : "text-white"}
-                onChange={(e) => setImage(e.target.files[0])}
-              />
-            </label>
-          </div>
-
-          <div className="p-3">
-            <div className="flex flex-wrap">
-              <div className="one">
-                <label htmlFor="name">Name</label> <br />
-                <input
-                  type="text"
-                  className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                />
-              </div>
-              <div className="two ml-10 ">
-                <label htmlFor="name block">Price</label> <br />
-                <input
-                  type="number"
-                  className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex flex-wrap">
-              <div className="one">
-                <label htmlFor="name block">Quantity</label> <br />
-                <input
-                  type="number"
-                  className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <label htmlFor="" className="my-5">
-              Description
-            </label>
-            <textarea
+      {/* Form Fields */}
+      <form onSubmit={handleAddProduct}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <label htmlFor="productName" className="text-green-600 text-sm font-medium">Product Name (Specify Quantity in Brackets, Eg: Per Kg)</label>
+            <input
               type="text"
-              className="p-2 mb-3 bg-[#101011] border rounded-lg w-[95%] text-white"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            ></textarea>
-
-            <div className="flex justify-between">
-              <div>
-                <label htmlFor="name block">Count In Stock</label> <br />
-                <input
-                  type="text"
-                  className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="">Category</label> <br />
-                <select
-                  placeholder="Choose Category"
-                  className="p-4 mb-3 w-[30rem] border rounded-lg bg-[#101011] text-white"
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option value="Category">Please Choose a Category</option>
-                  {categories?.map((c) => (
-                    <option key={c._id} value={c._id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <button
-              className="py-4 px-10 mt-5 rounded-lg text-lg font-bold bg-pink-600"
-              onClick={handleAddProduct}
-            >
-              Submit
-            </button>
+              id="productName"
+              className="p-3 w-full bg-gray-100 border border-green-500 rounded-lg text-gray-800 text-sm" 
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="price" className="text-green-600 text-sm font-medium">Price</label>
+            <input
+              type="number"
+              id="price"
+              className="p-3 w-full bg-gray-100 border border-green-500 rounded-lg text-gray-800 text-sm"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
           </div>
         </div>
-      </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <label htmlFor="quantity" className="text-green-600 text-sm font-medium">Quantity</label>
+            <input
+              type="number"
+              id="quantity"
+              className="p-3 w-full bg-gray-100 border border-green-500 rounded-lg text-gray-800 text-sm"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="category" className="text-green-600 text-sm font-medium">Category</label>
+            <select
+              id="category"
+              className="p-3 w-full bg-gray-100 border border-green-500 rounded-lg text-gray-800 text-sm"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="" className="text-green-600">Please Choose a Category</option>
+              {categories.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <label htmlFor="description" className="text-green-600 text-sm font-medium">Description</label>
+          <textarea
+            id="description"
+            className="p-3 w-full bg-gray-100 border border-green-500 rounded-lg text-gray-800 text-sm"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 rounded-lg bg-green-600 hover:bg-green-500 text-white font-medium transition-colors mt-6"
+        >
+          Add Product
+        </button>
+      </form>
     </div>
   );
 };

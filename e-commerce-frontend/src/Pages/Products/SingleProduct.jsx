@@ -52,7 +52,7 @@ const SingleProduct = () => {
         <h2 className="text-3xl font-bold text-gray-800">{product.title}</h2>
         <p className="text-gray-600 text-lg">{product.description}</p>
         <p className="text-xl font-semibold text-green-700">
-          Price: ${product.price}
+          Price: NPR {product.price}
         </p>
 
         {/* Add to Cart Button */}
