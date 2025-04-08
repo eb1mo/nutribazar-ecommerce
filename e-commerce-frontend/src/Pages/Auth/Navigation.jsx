@@ -128,7 +128,7 @@ const Navbar = ({ userInfo }) => {
                 <div className="absolute right-0 bg-white text-black shadow-md rounded-md py-2 w-48 flex flex-col">
                   {userInfo.role === "admin" ? (
                     <>
-                      <Link to="/admindashboard" className="dropdown-item px-4 py-2 hover:bg-gray-200">Admin Dashboard</Link>
+                      {/* <Link to="/admindashboard" className="dropdown-item px-4 py-2 hover:bg-gray-200">Admin Dashboard</Link> */}
                       <Link to="/addcategory" className="dropdown-item px-4 py-2 hover:bg-gray-200">Add Category</Link>
                       <Link to="/addproduct" className="dropdown-item px-4 py-2 hover:bg-gray-200">Add Product</Link>
                       <Link to="/allorders" className="dropdown-item px-4 py-2 hover:bg-gray-200">Orders</Link>

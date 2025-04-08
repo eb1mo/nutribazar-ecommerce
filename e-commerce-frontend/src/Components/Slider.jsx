@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Slider = () => {
   const [products, setProducts] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -18,6 +19,14 @@ const Slider = () => {
     fetchProducts();
   }, []);
 
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % products.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + products.length) % products.length);
+  };
+
   return (
     <div className="relative w-full bg-gray-100 p-4 rounded-lg">
       <div className="text-center">
@@ -27,7 +36,7 @@ const Slider = () => {
       </div>
       {/* Slider Container */}
       <div className="flex flex-col md:flex-row justify-between items-center space-x-4 overflow-hidden">
-        {products.slice(0, 2).map((product) => (
+        {products.slice(currentSlide, currentSlide + 2).map((product) => (
           <div
             key={product._id}
             className="w-full md:w-1/2 bg-white border border-gray-200 rounded-lg shadow-lg mb-6 md:mb-0"
@@ -68,13 +77,13 @@ const Slider = () => {
 
       {/* Navigation Buttons */}
       <button
-        onClick={() => {}}
+        onClick={prevSlide}
         className="absolute top-1/2 left-4 transform -translate-y-1/2 text-green-600 hover:text-green-700 text-4xl font-bold focus:outline-none transition duration-300 ease-in-out"
       >
         &lt;
       </button>
       <button
-        onClick={() => {}}
+        onClick={nextSlide}
         className="absolute top-1/2 right-4 transform -translate-y-1/2 text-green-600 hover:text-green-700 text-4xl font-bold focus:outline-none transition duration-300 ease-in-out"
       >
         &gt;

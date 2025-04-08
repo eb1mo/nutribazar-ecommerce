@@ -40,8 +40,8 @@ const Order = () => {
   }, [navigate]);
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+    <div className="container mx-auto mt-10 px-4 py-8 min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto mt-10">
         <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800 text-center">
           {isAdmin ? "All Orders" : "My Orders"}
         </h1>

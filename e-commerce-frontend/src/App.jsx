@@ -3,8 +3,6 @@ import Navigation from "./Pages/Auth/Navigation";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { SearchProvider } from './Context/SearchContext';
-import SearchResults from './Pages/SearchResults';
-import Footer from './Components/Footer';
 
 function App() {
   const [userInfo, setUserInfo] = useState(
@@ -18,7 +16,6 @@ function App() {
       <main className="m-auto">
         <Outlet context={{ setUserInfo }} />
       </main>
-      <Footer />
     </SearchProvider>
   );
 }

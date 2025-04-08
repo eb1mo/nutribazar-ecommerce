@@ -76,11 +76,11 @@ const AddProduct = () => {
       <form onSubmit={handleAddProduct}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label htmlFor="productName" className="text-green-600 text-sm font-medium">Product Name</label>
+            <label htmlFor="productName" className="text-green-600 text-sm font-medium">Product Name (Specify Quantity in Brackets, Eg: Per Kg)</label>
             <input
               type="text"
               id="productName"
-              className="p-3 w-full bg-gray-100 border border-green-500 rounded-lg text-gray-800 text-sm"
+              className="p-3 w-full bg-gray-100 border border-green-500 rounded-lg text-gray-800 text-sm" 
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
             />
