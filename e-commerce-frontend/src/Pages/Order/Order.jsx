@@ -40,92 +40,110 @@ const Order = () => {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-green-50 text-gray-900">
-      <h1 className="text-4xl font-bold mb-6 text-green-700">
-        {isAdmin ? "All Orders" : "My Orders"}
-      </h1>
-      {error && <p className="text-red-600 font-medium">{error}</p>}
-      {orders.length === 0 && !error ? (
-        <p className="text-gray-600">No orders found.</p>
-      ) : (
-        <div className="w-3/4">
-          {orders.map((order) => (
-            <div
-              key={order._id}
-              className="bg-white p-5 mb-6 rounded-2xl shadow-lg"
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-xl font-semibold text-green-800">
-                    Order ID: {order._id}
-                  </h2>
-                  {isAdmin && (
-                    <p className="text-gray-700">
-                      <span className="font-semibold">Customer:</span>{" "}
-                      {order.user?.username || 'Unknown'} ({order.user?.email || 'No email'})
-                    </p>
-                  )}
-                </div>
-                <div className="text-right">
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Date:</span>{" "}
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-700">
-                    <span className="font-semibold">Status:</span>{" "}
-                    <span className={`px-2 py-1 rounded ${
-                      order.paymentStatus === "Completed" 
-                        ? "bg-green-100 text-green-800" 
-                        : order.paymentStatus === "Failed"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}>
-                      {order.paymentStatus}
-                    </span>
-                  </p>
-                </div>
-              </div>
-              
-              <div className="mt-4">
-                <p className="text-gray-700">
-                  <span className="font-semibold">Amount:</span> Rs.{" "}
-                  {order.amount / 100}
-                </p>
-                <p className="text-gray-700">
-                  <span className="font-semibold">Shipping Name:</span>{" "}
-                  {order.shipping_name || 'Not provided'}
-                </p>
-                <p className="text-gray-700">
-                  <span className="font-semibold">Shipping Address:</span>{" "}
-                  {order.shipping_address || 'Not provided'}
-                </p>
-                <p className="text-gray-700">
-                  <span className="font-semibold">Shipping Phone:</span>{" "}
-                  {order.shipping_phone || 'Not provided'}
-                </p>
-              </div>
+    <div className="container mx-auto px-4 py-8 min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800 text-center">
+          {isAdmin ? "All Orders" : "My Orders"}
+        </h1>
+        
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-center">
+            {error}
+          </div>
+        )}
 
-              <h3 className="mt-3 font-semibold text-green-800">Items:</h3>
-              <ul className="mt-2">
-                {order.items?.map((item) => (
-                  <li key={item._id} className="ml-4 text-gray-800 flex items-center gap-4">
-                    <img 
-                      src={`http://localhost:5000/${item.product?.productImage}`} 
-                      alt={item.product?.name} 
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                    <div>
-                      <p className="font-medium">{item.product?.name || 'Product name not available'}</p>
-                      <p>Quantity: {item.quantity}</p>
-                      <p>Price: Rs. {item.product?.price || 'Price not available'}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
+        {orders.length === 0 && !error ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No orders found.</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {orders.map((order) => (
+              <div
+                key={order._id}
+                className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
+              >
+                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      Order ID: {order._id}
+                    </h2>
+                    {isAdmin && (
+                      <p className="text-gray-600 mt-1">
+                        <span className="font-medium">Customer:</span>{" "}
+                        {order.user?.username || 'Unknown'} ({order.user?.email || 'No email'})
+                      </p>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <p className="text-gray-600">
+                      <span className="font-medium">Date:</span>{" "}
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </p>
+                    <p className="mt-1">
+                      <span className="font-medium">Status:</span>{" "}
+                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                        order.paymentStatus === "Completed" 
+                          ? "bg-green-100 text-green-800" 
+                          : order.paymentStatus === "Failed"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}>
+                        {order.paymentStatus}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <p className="text-gray-700">
+                      <span className="font-medium">Amount:</span> Rs.{" "}
+                      {order.amount / 100}
+                    </p>
+                    <p className="text-gray-700 mt-1">
+                      <span className="font-medium">Shipping Name:</span>{" "}
+                      {order.shipping_name || 'Not provided'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-700">
+                      <span className="font-medium">Shipping Address:</span>{" "}
+                      {order.shipping_address || 'Not provided'}
+                    </p>
+                    <p className="text-gray-700 mt-1">
+                      <span className="font-medium">Shipping Phone:</span>{" "}
+                      {order.shipping_phone || 'Not provided'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="border-t pt-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Items:</h3>
+                  <div className="space-y-4">
+                    {order.items?.map((item) => (
+                      <div key={item._id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                        <img 
+                          src={`http://localhost:5000/${item.product?.productImage}`} 
+                          alt={item.product?.name} 
+                          className="w-20 h-20 object-cover rounded"
+                        />
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-800">{item.product?.name || 'Product name not available'}</p>
+                          <div className="flex flex-wrap gap-4 mt-1 text-sm text-gray-600">
+                            <p>Quantity: {item.quantity}</p>
+                            <p>Price: Rs. {item.product?.price || 'Price not available'}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
